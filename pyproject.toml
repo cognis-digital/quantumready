@@ -1,0 +1,21 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+[project]
+name = "cognis-quantumready"
+version = "1.0.0"
+description = "Post-quantum migration readiness scanner — find quantum-vulnerable crypto, map to NIST PQC (FIPS 203/204/205)"
+license = {text = "LicenseRef-COCL-1.0"}
+requires-python = ">=3.10"
+readme = "README.md"
+keywords = ["post-quantum","pqc","cryptography","ml-kem","security","nist","cognis-digital"]
+classifiers = ["Development Status :: 4 - Beta","License :: Other/Proprietary License"]
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+[project.urls]
+Homepage = "https://cognis.digital"
+Repository = "https://github.com/cognis-digital/quantumready"
+[project.scripts]
+quantumready = "quantumready.cli:main"
+[tool.hatch.build.targets.wheel]
+packages = ["quantumready"]
