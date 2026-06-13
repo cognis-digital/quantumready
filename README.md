@@ -15,6 +15,48 @@
 
 "Harvest now, decrypt later" is real. `quantumready` finds **RSA / ECC / DH / DSA** usage that a quantum computer breaks, grades your **PQC readiness (A–F)**, and maps each finding to the NIST standards: **ML-KEM (FIPS 203)**, **ML-DSA (FIPS 204)**, **SLH-DSA (FIPS 205)**.
 
+<!-- cognis:layman:start -->
+## What is this?
+
+`quantumready` scans your code, configuration files, and certificates to find encryption methods that future quantum computers will be able to break — things like RSA keys and elliptic-curve cryptography. It then gives you a readiness grade from A to F and tells you exactly which files to update and what to replace them with, based on the official NIST post-quantum standards. It is a command-line tool aimed at developers and security teams who want to know their exposure before quantum computing becomes a real threat.
+<!-- cognis:layman:end -->
+
+<!-- cognis:install:start -->
+## Install
+
+`quantumready` is source-available (not published to PyPI) — every method below installs
+straight from GitHub. Pick whichever you prefer; the one-line scripts auto-detect
+the best tool available on your machine.
+
+**One-liner (Linux / macOS):**
+```sh
+curl -fsSL https://raw.githubusercontent.com/cognis-digital/quantumready/HEAD/install.sh | sh
+```
+
+**One-liner (Windows PowerShell):**
+```powershell
+irm https://raw.githubusercontent.com/cognis-digital/quantumready/HEAD/install.ps1 | iex
+```
+
+**Or install manually — any one of:**
+```sh
+pipx install "git+https://github.com/cognis-digital/quantumready.git"     # isolated (recommended)
+uv tool install "git+https://github.com/cognis-digital/quantumready.git"  # uv
+pip install "git+https://github.com/cognis-digital/quantumready.git"      # pip
+```
+
+**From source:**
+```sh
+git clone https://github.com/cognis-digital/quantumready.git
+cd quantumready && pip install .
+```
+
+Then run:
+```sh
+quantumready --help
+```
+<!-- cognis:install:end -->
+
 ## Install (every way)
 ```bash
 pip install "git+https://github.com/cognis-digital/quantumready.git"   # or pipx / uv tool install
