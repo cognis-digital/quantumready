@@ -15,6 +15,28 @@
 
 "Harvest now, decrypt later" is real. `quantumready` finds **RSA / ECC / DH / DSA** usage that a quantum computer breaks, grades your **PQC readiness (A–F)**, and maps each finding to the NIST standards: **ML-KEM (FIPS 203)**, **ML-DSA (FIPS 204)**, **SLH-DSA (FIPS 205)**.
 
+## Usage — step by step
+
+1. Install the CLI (console-script: `quantumready`):
+   ```bash
+   pipx install "git+https://github.com/cognis-digital/quantumready.git"
+   quantumready --version
+   ```
+2. Scan a codebase for post-quantum exposure (RSA/ECC vs NIST FIPS 203/204/205):
+   ```bash
+   quantumready scan ./src
+   ```
+3. Get machine-readable output for dashboards or SBOM-style tracking:
+   ```bash
+   quantumready scan ./src --format json > pq-report.json
+   jq '.findings[] | select(.severity=="critical")' pq-report.json
+   ```
+4. Read the report — review flagged algorithms and their migration guidance.
+5. In CI, gate the build on a severity threshold (non-zero exit when met):
+   ```bash
+   quantumready scan ./src --fail-on high
+   ```
+
 ## Install (every way)
 ```bash
 pip install "git+https://github.com/cognis-digital/quantumready.git"   # or pipx / uv tool install
