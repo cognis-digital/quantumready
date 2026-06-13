@@ -21,6 +21,16 @@
 `quantumready` scans your code, configuration files, and certificates to find encryption methods that future quantum computers will be able to break — things like RSA keys and elliptic-curve cryptography. It then gives you a readiness grade from A to F and tells you exactly which files to update and what to replace them with, based on the official NIST post-quantum standards. It is a command-line tool aimed at developers and security teams who want to know their exposure before quantum computing becomes a real threat.
 <!-- cognis:layman:end -->
 
+<!-- cognis:domains:start -->
+## Domains
+
+**Primary domain:** Finance & Quant  ·  **JTF MERIDIAN division:** BLACKBOOK · ORACLE
+
+**Topics:** `cognis` `finance` `fintech` `quant` `crypto` `compliance`
+
+Part of the **Cognis Neural Suite** — 300+ source-available tools organized across 12 domains under the JTF MERIDIAN command structure. See the [suite on GitHub](https://github.com/cognis-digital) and [jtf-meridian](https://github.com/cognis-digital/jtf-meridian) for how the pieces fit together.
+<!-- cognis:domains:end -->
+
 <!-- cognis:install:start -->
 ## Install
 
