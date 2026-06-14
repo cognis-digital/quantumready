@@ -21,3 +21,6 @@ Repository = "https://github.com/cognis-digital/quantumready"
 quantumready = "quantumready.cli:main"
 [tool.hatch.build.targets.wheel]
 packages = ["quantumready"]
+
+[tool.hatch.metadata]
+allow-direct-references = true
