@@ -1,0 +1,23 @@
+{
+  "crypto_kev_ids": [
+    "CVE-2019-6693",
+    "CVE-2025-47827",
+    "CVE-2025-59718",
+    "CVE-2026-50751"
+  ],
+  "by_keyword": {
+    "key exchange": [
+      "CVE-2026-50751"
+    ],
+    "certificate validation": [
+      "CVE-2026-50751"
+    ],
+    "cryptographic signature": [
+      "CVE-2025-59718",
+      "CVE-2025-47827"
+    ],
+    "cryptographic key": [
+      "CVE-2019-6693"
+    ]
+  }
+}

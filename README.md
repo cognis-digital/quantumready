@@ -73,6 +73,48 @@ Each [`demos/`](demos) folder has an input file in a **real** format plus a `SCE
 | [08](demos/08-x509-inventory) | Fleet certificate inventory | X.509 CSV export |
 | [09](demos/09-vpn-ipsec) | Site-to-site VPN | strongSwan `ipsec.conf` |
 | [10](demos/10-ci-gate) | CI gate + SARIF upload | Go + GitHub Actions |
+| [11](demos/11-feed-enrichment) | KEV/NVD enrichment — exploited-now crypto CVEs (offline) | Python + live feeds |
+
+## Feed enrichment — exploited-in-the-wild crypto CVEs (edge / air-gap)
+
+A PQC migration is multi-year. What do you patch **first**? `quantumready` answers
+that by cross-referencing the crypto your scan detects against two authoritative,
+**keyless** intelligence feeds, then re-serving them **offline** for edge/air-gapped use:
+
+| Feed id | Source | URL |
+|---------|--------|-----|
+| `cisa-kev` | CISA Known Exploited Vulnerabilities (actively-exploited CVEs) | https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json |
+| `nvd-cve` | NIST National Vulnerability Database (CVE API 2.0) | https://services.nvd.nist.gov/rest/json/cves/2.0 |
+
+**The enrichment (not cosmetic):** for each quantum-vulnerable family the scanner
+finds (RSA / ECC / DH / DSA), it pulls the relevant NVD CVEs and intersects them
+with the CISA-KEV catalog — surfacing the crypto weaknesses attackers are
+exploiting **today** that you must patch before/while migrating to NIST PQC.
+
+```bash
+quantumready feeds list                       # the 2 feeds this tool consumes
+quantumready feeds update                      # fetch + cache (keyless HTTPS)
+quantumready feeds get cisa-kev --offline      # re-serve from cache, no network
+quantumready scan ./src --enrich               # scan + KEV/NVD cross-reference
+quantumready scan ./src --enrich --offline     # same, fully offline (air-gap)
+```
+
+### Air-gap / sneakernet workflow
+
+The bundled `datafeeds` module is pure stdlib (urllib only): keyless HTTPS fetch →
+disk cache (`COGNIS_FEEDS_CACHE`, default `~/.cache/cognis-feeds`) → `--offline`
+re-serve. Move a cache snapshot into a disconnected enclave:
+
+```bash
+# connected host
+quantumready feeds update
+python -m quantumready.datafeeds snapshot-export feeds.tar.gz
+# air-gapped enclave
+python -m quantumready.datafeeds snapshot-import feeds.tar.gz
+quantumready scan code/ --enrich --offline
+```
+
+Defensive / authorized-use intelligence only.
 
 ## Architecture
 ```mermaid
