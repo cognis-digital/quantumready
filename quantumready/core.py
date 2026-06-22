@@ -20,7 +20,7 @@ RULES = [
     ("QR-DH", "high", r"(?i)\b(diffie[-_ ]?hellman|\bdhparam\b|modp|ffdhe)\b",
      "Finite-field Diffie-Hellman — quantum-vulnerable",
      "Adopt ML-KEM (FIPS 203) for key establishment."),
-    ("QR-DSA", "medium", r"(?i)\b(dsa\b|dss)\b",
+    ("QR-DSA", "medium", r"(?i)(?<![a-z0-9-])(dsa|dss)\b",
      "DSA signatures — quantum-vulnerable + legacy",
      "Move to ML-DSA (FIPS 204)."),
     ("QR-WEAKRSA", "critical", r"(?i)rsa[^0-9]{0,8}(512|1024)\b",
@@ -68,3 +68,54 @@ def readiness(findings):
 def to_json(findings):
     return json.dumps({"tool": TOOL_NAME, "findings": [asdict(f) for f in findings],
                        "readiness": readiness(findings)}, indent=2)
+
+# SARIF severity -> SARIF result.level (errors gate CI; notes are informational).
+_SARIF_LEVEL = {"critical": "error", "high": "error", "medium": "warning",
+                "low": "note", "info": "note"}
+
+
+def to_sarif(findings):
+    """Emit SARIF 2.1.0 — the OASIS standard consumed by GitHub code scanning,
+    Azure DevOps, and most SAST dashboards. One rule per QR rule id; one result
+    per finding with a physicalLocation so it annotates the exact source line."""
+    seen, rules = {}, []
+    for rid, sev, _rx, label, rec in RULES:
+        if rid in seen:
+            continue
+        seen[rid] = len(rules)
+        rules.append({
+            "id": rid,
+            "name": rid.replace("-", ""),
+            "shortDescription": {"text": label},
+            "fullDescription": {"text": rec},
+            "defaultConfiguration": {"level": _SARIF_LEVEL.get(sev, "note")},
+            "properties": {"security-severity": {
+                "critical": "9.8", "high": "8.1", "medium": "5.5",
+                "low": "3.1", "info": "0.0"}.get(sev, "0.0"),
+                "tags": ["cryptography", "post-quantum", "nist-pqc"]},
+        })
+    results = []
+    for f in findings:
+        results.append({
+            "ruleId": f.id,
+            "ruleIndex": seen.get(f.id, 0),
+            "level": _SARIF_LEVEL.get(f.severity, "note"),
+            "message": {"text": f"{f.label}. {f.recommend}"},
+            "locations": [{"physicalLocation": {
+                "artifactLocation": {"uri": f.where.replace("\\", "/")},
+                "region": {"startLine": max(1, f.line),
+                           "snippet": {"text": f.match}}}}],
+        })
+    return json.dumps({
+        "$schema": "https://json.schemastore.org/sarif-2.1.0.json",
+        "version": "2.1.0",
+        "runs": [{
+            "tool": {"driver": {
+                "name": TOOL_NAME,
+                "version": TOOL_VERSION,
+                "informationUri": "https://github.com/cognis-digital/quantumready",
+                "rules": rules,
+            }},
+            "results": results,
+        }],
+    }, indent=2)

@@ -1,0 +1,28 @@
+# .github/workflows/pqc-scan.yml
+# Drop-in GitHub Actions job: gate PRs on PQC exposure and upload SARIF so
+# findings appear inline in the GitHub "Code scanning" tab.
+name: pqc-scan
+on: [push, pull_request]
+
+permissions:
+  contents: read
+  security-events: write   # required for upload-sarif
+
+jobs:
+  quantumready:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pipx install "git+https://github.com/cognis-digital/quantumready.git"
+
+      # Machine-readable SARIF for the Security tab (always runs).
+      - run: quantumready scan . --format sarif > quantumready.sarif
+      - uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: quantumready.sarif
+
+      # Hard gate: fail the build if any high+ exposure is present.
+      - run: quantumready scan . --fail-on high

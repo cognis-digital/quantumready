@@ -1,0 +1,15 @@
+# Target-state TLS policy for the platform team after PQC migration.
+# This is what "done" looks like — used to confirm the scanner recognizes PQC.
+tls:
+  min_version: "1.3"
+  # Hybrid key exchange: classical X25519 + ML-KEM-768 (FIPS 203).
+  key_exchange:
+    - X25519MLKEM768
+    - mlkem768
+  # Signatures: ML-DSA (FIPS 204) with SLH-DSA available for long-lived roots.
+  signatures:
+    - ml-dsa-65
+    - slh-dsa-sha2-128s
+  notes: >
+    All key establishment is PQC-hybrid; certificate signatures migrating to ML-DSA.
+    Kept the classical half of the hybrid for interop during rollout.

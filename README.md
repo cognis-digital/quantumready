@@ -31,8 +31,13 @@
    quantumready scan ./src --format json > pq-report.json
    jq '.findings[] | select(.severity=="critical")' pq-report.json
    ```
-4. Read the report — review flagged algorithms and their migration guidance.
-5. In CI, gate the build on a severity threshold (non-zero exit when met):
+4. Emit **SARIF 2.1.0** for GitHub code scanning / Azure DevOps / any SAST dashboard:
+   ```bash
+   quantumready scan ./src --format sarif > quantumready.sarif
+   # then upload via github/codeql-action/upload-sarif (see demos/10-ci-gate)
+   ```
+5. Read the report — review flagged algorithms and their migration guidance.
+6. In CI, gate the build on a severity threshold (non-zero exit when met):
    ```bash
    quantumready scan ./src --fail-on high
    ```
@@ -48,8 +53,26 @@ docker run --rm ghcr.io/cognis-digital/quantumready --help
 ```bash
 quantumready scan .                    # grade your repo's PQC readiness
 quantumready scan . --format json      # machine-readable
+quantumready scan . --format sarif     # SARIF 2.1.0 (GitHub code scanning)
 quantumready scan . --fail-on high     # CI gate
 ```
+
+## Demos — real-use scenarios
+Each [`demos/`](demos) folder has an input file in a **real** format plus a `SCENARIO.md`
+(where the data came from, what to expect, the exact command, how to act):
+
+| # | Scenario | Input format |
+|---|----------|--------------|
+| [01](demos/01-basic) | Basic source scan (start here) | Python |
+| [02](demos/02-tls-nginx) | TLS termination audit | nginx.conf |
+| [03](demos/03-openssh-config) | SSH bastion hardening | sshd_config |
+| [04](demos/04-python-pki) | Token-signing microservice | Python (`cryptography`) |
+| [05](demos/05-weak-rsa-legacy) | EOL device — undersized/legacy crypto | device config |
+| [06](demos/06-pqc-hybrid-ready) | PQC-hybrid target state (grade A) | TLS policy YAML |
+| [07](demos/07-java-keystore) | JVM service tier | Spring `application.properties` |
+| [08](demos/08-x509-inventory) | Fleet certificate inventory | X.509 CSV export |
+| [09](demos/09-vpn-ipsec) | Site-to-site VPN | strongSwan `ipsec.conf` |
+| [10](demos/10-ci-gate) | CI gate + SARIF upload | Go + GitHub Actions |
 
 ## Architecture
 ```mermaid
@@ -58,7 +81,7 @@ flowchart LR
   SC --> R[Rules: RSA · ECC · DH · DSA]
   R --> G[Readiness grade A-F]
   R --> M[NIST PQC migration plan<br/>ML-KEM · ML-DSA · SLH-DSA]
-  M --> O[table · JSON · MCP]
+  M --> O[table · JSON · SARIF · MCP]
 ```
 
 ## Related

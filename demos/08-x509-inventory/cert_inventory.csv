@@ -1,0 +1,7 @@
+cn,not_after,public_key_algorithm,signature_algorithm,notes
+api.example.com,2026-11-02,RSA 2048,sha256WithRSAEncryption,public edge cert
+internal-ca.example.com,2031-04-18,RSA 4096,sha384WithRSAEncryption,private root CA
+mtls-client-07.example.com,2026-08-30,id-ecPublicKey prime256v1,ecdsa-with-SHA256,service mTLS client
+vpn-gw.example.com,2027-01-15,id-ecPublicKey secp384r1,ecdsa-with-SHA384,VPN gateway
+legacy-portal.example.com,2026-07-01,RSA 1024,sha1WithRSAEncryption,EOL — flagged for retirement
+code-sign.example.com,2028-03-22,ml-dsa-65,ml-dsa-65,pilot PQC code-signing cert

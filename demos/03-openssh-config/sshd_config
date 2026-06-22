@@ -1,0 +1,15 @@
+# /etc/ssh/sshd_config — bastion host hardening review
+Port 22
+Protocol 2
+
+# Host keys offered to clients
+HostKey /etc/ssh/ssh_host_rsa_key
+HostKey /etc/ssh/ssh_host_ed25519_key
+
+# Key-exchange algorithms
+KexAlgorithms curve25519-sha256,ecdh-sha2-nistp256,diffie-hellman-group14-sha256
+
+# Public-key auth: which client key types are accepted
+PubkeyAcceptedAlgorithms ssh-ed25519,ecdsa-sha2-nistp256,ssh-rsa
+
+PasswordAuthentication no
