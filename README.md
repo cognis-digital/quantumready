@@ -144,3 +144,7 @@ Forward `quantumready`'s findings to STIX/MISP/Sigma/Splunk/Elastic/Slack/webhoo
 
 ## License
 COCL v1.0 — see [LICENSE](LICENSE).
+
+## Bundled vulnerability database
+
+Ships `quantumready/cognis_vulndb.jsonl.gz` — **262,351 real vulnerabilities** (OSV: PyPI/npm/Go/Maven/RubyGems/crates.io/NuGet) with detailed metadata (CVE/GHSA aliases, ecosystem, severity/CVSS, affected packages, dates). Pure-stdlib offline loader `vulndb_local.VulnDB` (`count`/`by_cve`/`by_package`/`search`), air-gap ready. Refresh/extend via `datafeeds.py bulk`.
