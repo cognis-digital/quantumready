@@ -1,0 +1,26 @@
+{
+  "name": "@cognis-digital/quantumready",
+  "version": "1.0.1",
+  "description": "Node/TypeScript port of the quantumready post-quantum readiness scanner (NIST FIPS 203/204/205). Passive/offline, stdlib-only.",
+  "type": "module",
+  "bin": {
+    "quantumready": "./quantumready.mjs"
+  },
+  "main": "./quantumready.mjs",
+  "types": "./quantumready.d.ts",
+  "scripts": {
+    "test": "node --test",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "license": "LicenseRef-COCL-1.0",
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "quantumready.mjs",
+    "quantumready.d.ts"
+  ],
+  "devDependencies": {
+    "typescript": "^5.4.0"
+  }
+}

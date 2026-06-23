@@ -1,0 +1,17 @@
+[package]
+name = "quantumready"
+version = "1.0.1"
+edition = "2021"
+description = "Rust port of the quantumready post-quantum readiness scanner (NIST FIPS 203/204/205). Passive/offline."
+license = "LicenseRef-COCL-1.0"
+repository = "https://github.com/cognis-digital/quantumready"
+
+[[bin]]
+name = "quantumready"
+path = "src/main.rs"
+
+[dependencies]
+regex = "1"
+
+[profile.release]
+opt-level = 2

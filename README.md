@@ -7,7 +7,7 @@
 
 ### Scan any codebase/config for **quantum-vulnerable crypto** and get a NIST-PQC migration plan. Q-Day is coming — know your exposure.
 
-[![License: COCL 1.0](https://img.shields.io/badge/License-COCL%201.0-2b6cb0.svg)](LICENSE) ![PQC](https://img.shields.io/badge/NIST-FIPS%20203%2F204%2F205-00897b) ![MCP](https://img.shields.io/badge/MCP-native-black) [![Suite](https://img.shields.io/badge/Cognis-Neural%20Suite-6b46c1.svg)](https://github.com/cognis-digital/cognis-neural-suite)
+[![License: COCL 1.0](https://img.shields.io/badge/License-COCL%201.0-2b6cb0.svg)](LICENSE) ![PQC](https://img.shields.io/badge/NIST-FIPS%20203%2F204%2F205-00897b) ![MCP](https://img.shields.io/badge/MCP-native-black) ![CI](https://img.shields.io/badge/CI-py%20%C2%B7%20go%20%C2%B7%20rust%20%C2%B7%20node-2b6cb0) ![Offline](https://img.shields.io/badge/scan-passive%20%2F%20offline-444) ![VulnDB](https://img.shields.io/badge/bundled%20OSV-262k%20vulns-6b46c1) [![Suite](https://img.shields.io/badge/Cognis-Neural%20Suite-6b46c1.svg)](https://github.com/cognis-digital/cognis-neural-suite)
 
 `#post-quantum` `#pqc` `#cryptography` `#ml-kem` `#security` `#harvest-now-decrypt-later`
 
@@ -125,6 +125,43 @@ flowchart LR
   R --> M[NIST PQC migration plan<br/>ML-KEM · ML-DSA · SLH-DSA]
   M --> O[table · JSON · SARIF · MCP]
 ```
+
+## Language ports — drop into any toolchain
+
+The core `scan` surface is ported to **Go, Rust, and Node/TypeScript** under
+[`ports/`](ports), so you can run the scanner in a non-Python CI lane or ship a
+single static binary. Every port mirrors the same 8 detection rules, the same
+A–F readiness score, the same JSON shape, and the same `--fail-on` exit code (2),
+and each has its own smoke/behavior test suite **built and run in CI on every push**
+([`.github/workflows/ci.yml`](.github/workflows/ci.yml)).
+
+| Port | Path | Run | Test |
+|------|------|-----|------|
+| Go | [`ports/go`](ports/go) | `go run . scan ./src` | `go test ./...` |
+| Rust | [`ports/rust`](ports/rust) | `cargo run -- scan ./src` | `cargo test` |
+| Node / TS | [`ports/node`](ports/node) | `node quantumready.mjs scan ./src` | `node --test` |
+
+```bash
+# any port, same output contract as the Python CLI
+$ node ports/node/quantumready.mjs scan demos/05-weak-rsa-legacy --format json | jq '.readiness.grade'
+"D"
+```
+
+All ports are **passive / offline by design** — they read only local files, open
+no socket, and perform no active network scanning. The data-heavy components
+(CISA-KEV/NVD enrichment and the bundled 262k-vuln OSV DB) remain in the Python
+package; the ports cover the portable, dependency-light scanning core. See
+[`ports/README.md`](ports/README.md) for the lookbehind-equivalence note (Go/Rust).
+
+## Scope, authorization & safety
+
+`quantumready` is a **defensive, authorized-use** tool and is **passive/offline by
+nature**: it reads source, configs, and certificate/algorithm strings on disk and
+produces a report. It does **no active network scanning**, sends no probes, and
+contains no exploit payloads. Feed access is keyless, cache-first, and re-servable
+fully offline for air-gapped use. All bundled intelligence is **real** — the CISA-KEV
+and NVD feeds and the 262k-record OSV database — with no fabricated CVEs or
+fingerprints. Use it only on systems and codebases you are authorized to assess.
 
 ## Related
 [🔐 agentpassport](https://github.com/cognis-digital/agentpassport) · [🧪 SecOps tools](https://github.com/cognis-digital/cognis-neural-suite) · [🗂️ the suite](https://github.com/cognis-digital/cognis-neural-suite)
