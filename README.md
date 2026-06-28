@@ -15,6 +15,50 @@
 
 "Harvest now, decrypt later" is real. `quantumready` finds **RSA / ECC / DH / DSA** usage that a quantum computer breaks, grades your **PQC readiness (A–F)**, and maps each finding to the NIST standards: **ML-KEM (FIPS 203)**, **ML-DSA (FIPS 204)**, **SLH-DSA (FIPS 205)**.
 
+
+<!-- cognis:example:start -->
+## 🔎 Example output
+
+Real, reproducible output from the tool — runs offline:
+
+```console
+$ quantumready-emit --version
+quantumready 1.0.0
+```
+
+```console
+$ quantumready-emit --help
+usage: quantumready [-h] [--version] {scan,feeds} ...
+
+Post-quantum migration readiness scanner (NIST FIPS 203/204/205).
+
+positional arguments:
+  {scan,feeds}
+    feeds       keyless CISA-KEV / NVD feed access (cache-first, air-gap)
+
+options:
+  -h, --help    show this help message and exit
+  --version     show program's version number and exit
+```
+
+```console
+$ quantumready-emit feeds
+usage: quantumready feeds [-h] {list,update,get} ...
+
+positional arguments:
+  {list,update,get}
+    list             list the feeds this tool consumes
+    update           fetch + cache cisa-kev and nvd-cve
+    get              print a feed (cisa-kev | nvd-cve)
+
+options:
+  -h, --help         show this help message and exit
+```
+
+> Blocks above are real `quantumready` output — reproduce them from a clone.
+
+<!-- cognis:example:end -->
+
 ## Usage — step by step
 
 1. Install the CLI (console-script: `quantumready`):

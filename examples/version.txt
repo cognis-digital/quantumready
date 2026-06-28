@@ -1,0 +1,3 @@
+$ quantumready-emit --version
+
+quantumready 1.0.0

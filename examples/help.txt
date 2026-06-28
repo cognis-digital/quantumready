@@ -1,0 +1,13 @@
+$ quantumready-emit --help
+
+usage: quantumready [-h] [--version] {scan,feeds} ...
+
+Post-quantum migration readiness scanner (NIST FIPS 203/204/205).
+
+positional arguments:
+  {scan,feeds}
+    feeds       keyless CISA-KEV / NVD feed access (cache-first, air-gap)
+
+options:
+  -h, --help    show this help message and exit
+  --version     show program's version number and exit

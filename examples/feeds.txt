@@ -1,0 +1,12 @@
+$ quantumready-emit feeds
+
+usage: quantumready feeds [-h] {list,update,get} ...
+
+positional arguments:
+  {list,update,get}
+    list             list the feeds this tool consumes
+    update           fetch + cache cisa-kev and nvd-cve
+    get              print a feed (cisa-kev | nvd-cve)
+
+options:
+  -h, --help         show this help message and exit
